@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Вспоминай</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #4605F9;
+            color: #C1B7D9;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 600px;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .timer {
+            font-size: 3rem;
+            color: white;
+            margin: 1.5rem 0;
+            font-weight: bold;
+        }
+        input {
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            width: 200px;
+            border-radius: 25px;
+            border: none;
+            text-align: center;
+            background-color: rgba(193, 183, 217, 0.2);
+            color: white;
+            margin: 10px 0;
+        }
+        button {
+            padding: 12px 25px;
+            background-color: #C1B7D9;
+            color: #4605F9;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: transform 0.3s;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        .result {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            color: white;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Вспоминай</h1>
+        <div class="timer" id="countdown">30</div>
+        <div>Дата моего дня рождения. Быстро</div>
+        <input type="text" id="answer" placeholder="ДД.ММ.ГГГГ" autocomplete="off">
+        <button onclick="checkAnswer()">Проверить</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        // Элементы
+        const timerEl = document.getElementById('countdown');
+        const answerInput = document.getElementById('answer');
+        const resultEl = document.getElementById('result');
+        
+        // Таймер
+        let time = 30;
+        let timerActive = true;
+        
+        function updateTimer() {
+            timerEl.textContent = time;
+            
+            if (time <= 0) {
+                timerActive = false;
+                resultEl.textContent = "Время вышло! Закрываюсь...";
+                setTimeout(() => {
+                    // Пытаемся закрыть вкладку
+                    try {
+                        window.close();
+                    } catch (e) {
+                        // Если не получилось - делаем редирект
+                        window.location.href = "about:blank";
+                    }
+                }, 2000);
+            } else {
+                time--;
+                setTimeout(updateTimer, 1000);
+            }
+        }
+        
+        // Проверка ответа
+        function checkAnswer() {
+            if (!timerActive) return;
+            
+            if (answerInput.value === "27.07.2006") {
+                timerActive = false;
+                resultEl.textContent = "Правильно! Код: 2 страница";
+            } else {
+                timerActive = false;
+                resultEl.textContent = "Неверно! Закрываюсь...";
+                setTimeout(() => {
+                    try {
+                        window.close();
+                    } catch (e) {
+                        window.location.href = "about:blank";
+                    }
+                }, 2000);
+            }
+        }
+        
+        // Обработка нажатия Enter
+        answerInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkAnswer();
+        });
+        
+        // Запуск
+        updateTimer();
+        answerInput.focus();
+    </script>
+</body>
+</html>
